@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secure Text Encryptor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      padding: 40px;
+      max-width: 520px;
+      width: 100%;
+      transition: all 0.3s ease-in-out;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #00796b;
+      font-size: 26px;
+    }
+    form {
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      color: #004d40;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border: 1.5px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus {
+      border-color: #00796b;
+      outline: none;
+    }
+    button {
+      background: #00796b;
+      color: white;
+      padding: 13px;
+      width: 100%;
+      border: none;
+      font-size: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background: #00695c;
+      transform: scale(1.02);
+    }
+    .result, .error {
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-weight: 500;
+      min-height: 40px;
+    }
+    .result {
+      background: #e8f5e9;
+      border: 1px solid #2e7d32;
+      color: #1b5e20;
+    }
+    .error {
+      background: #ffebee;
+      border: 1px solid #c62828;
+      color: #b71c1c;
+    }
+    .footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 13px;
+      color: #555;
+    }
+    .dev-by {
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #004d40;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 0 20px;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Secure Text Encryptor</h2>
+    <div class="dev-by">Developed by Aditya Sen</div>
+
+    <form id="encryptForm">
+      <label for="encryptInput">🔏 Text to Encrypt</label>
+      <input type="text" id="encryptInput" placeholder="Type plain text..." required />
+      <button type="submit">Encrypt 🔐</button>
+      <div id="encryptResult" class="result" style="display:none;"></div>
+    </form>
+
+    <form id="decryptForm">
+      <label for="decryptInput">🔓 Text to Decrypt</label>
+      <input type="text" id="decryptInput" placeholder="Paste encrypted text..." required />
+      <button type="submit">Decrypt 🔓</button>
+      <div id="decryptResult" class="result" style="display:none;"></div>
+    </form>
+
+    <div class="footer">
+      © 2025 SecureTextApp | Built with Node.js + AES-256
+    </div>
+  </div>
+
+  <script>
+    async function postData(url = '', data = {}) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data)
+      });
+      return response.text();
+    }
+
+    const encryptForm = document.getElementById('encryptForm');
+    const encryptInput = document.getElementById('encryptInput');
+    const encryptResult = document.getElementById('encryptResult');
+
+    encryptForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      encryptResult.style.display = 'none';
+      encryptResult.className = 'result';
+
+      try {
+        const responseText = await postData('/encrypt', { text: encryptInput.value });
+        encryptResult.textContent = responseText.replace(/^Encrypted Text: /, '');
+        encryptResult.style.display = 'block';
+      } catch (err) {
+        encryptResult.textContent = 'Encryption failed. Try again.';
+        encryptResult.className = 'error';
+        encryptResult.style.display = 'block';
+      }
+    });
+
+    const decryptForm = document.getElementById('decryptForm');
+    const decryptInput = document.getElementById('decryptInput');
+    const decryptResult = document.getElementById('decryptResult');
+
+    decryptForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      decryptResult.style.display = 'none';
+      decryptResult.className = 'result';
+
+      try {
+        const responseText = await postData('/decrypt', { text: decryptInput.value });
+        if(responseText.toLowerCase().includes('failed')) {
+          throw new Error('Decryption failed');
+        }
+        decryptResult.textContent = responseText.replace(/^Decrypted Text: /, '');
+        decryptResult.style.display = 'block';
+      } catch (err) {
+        decryptResult.textContent = 'Decryption failed. Make sure the input is correct.';
+        decryptResult.className = 'error';
+        decryptResult.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
