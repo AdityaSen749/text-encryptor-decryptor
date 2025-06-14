@@ -4,8 +4,6 @@ A simple, secure web application to encrypt and decrypt text using AES-256 encry
 
 ---
 
-![image](https://github.com/user-attachments/assets/21389d35-f66e-463a-b4bc-dc8dad7212c3)
-![image](https://github.com/user-attachments/assets/432da8d3-64f6-45d4-a554-0a4fba3fb934)
 
 
 ## 📖 Overview
