@@ -4,6 +4,7 @@ A simple, secure web application to encrypt and decrypt text using AES-256 encry
 
 ---
 
+![Secure Text Encryptor - Google Chrome 14-06-2025 20_31_46](https://github.com/user-attachments/assets/84ad2a8c-3f72-467b-8227-4c75366a47cf)
 
 
 ## 📖 Overview
